@@ -1,0 +1,27 @@
+[build-system]
+build-backend = "uv_build"
+requires = [ "uv_build>=0.11,<0.12" ]
+
+[project]
+name = "fiab-plugin-experiments"
+version = "0.1.0"
+description = "Weather Forecast in a Box, experiments plugin (block declarations)"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = [ "LICENSE" ]
+authors = [
+  { name = "European Centre for Medium-Range Weather Forecasts (ECMWF)", email = "software.support@ecmwf.int" },
+]
+requires-python = ">=3.11"
+# NOTE deliberately no dependency on fiab-plugin-experiments-runtime -- blocks request it in the worker environment by name
+dependencies = [
+  "fiab-core>=6,<7",
+]
+
+[dependency-groups]
+dev = [ "pytest", "ruff", "ty" ]
+
+[tool.ruff]
+line-length = 140
+lint.select = [ "E", "F", "I", "ANN" ]
+lint.ignore = [ "ANN401" ]

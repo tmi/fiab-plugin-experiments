@@ -1,0 +1,27 @@
+# Dev-only meta package: installs both packages side by side, guaranteed editable, as a single pip element:
+#   uv pip install -e <this dir>
+# It contains no code of its own. Workspace sources make both dependencies resolve to the local member directories (editable).
+# NOTE not meant to be published -- non-editable installs (PyPI) use the two wheels directly.
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = [ "setuptools>=80" ]
+
+[project]
+name = "fiab-plugin-experiments-dev"
+version = "0.0.0"
+description = "Dev meta package installing fiab-plugin-experiments and its runtime, both editable"
+requires-python = ">=3.11"
+dependencies = [
+  "fiab-plugin-experiments",
+  "fiab-plugin-experiments-runtime",
+]
+
+[tool.setuptools]
+packages = []
+
+[tool.uv.sources]
+fiab-plugin-experiments = { workspace = true }
+fiab-plugin-experiments-runtime = { workspace = true }
+
+[tool.uv.workspace]
+members = [ "packages/*" ]
