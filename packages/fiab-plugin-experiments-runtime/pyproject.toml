@@ -20,7 +20,7 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = [ "pytest", "ruff", "ty" ]
+dev = [ "pytest", "ruff", "ty", "zarr" ]
 
 [tool.ruff]
 line-length = 140

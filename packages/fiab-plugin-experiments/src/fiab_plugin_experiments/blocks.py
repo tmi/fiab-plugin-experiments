@@ -139,7 +139,7 @@ class WindPointDirection(Product):
         if spatial:
             qube = qube.remove_by_key(spatial)
         qube = _with_axis(qube.remove_by_key([PARAM]), PARAM, [WIND_OUTPUT_PARAM])
-        return QubedOutput(dataqube=qube, datatype="float")
+        return QubedOutput(dataqube=qube, datatype="earthkit.data.FieldList")
 
     def compile(self, inputs: ActionLookup, block: BlockInstanceRich) -> Either[Action, Error]:  # ty:ignore[invalid-type-arguments] # semigroup
         self._check_config(block)

@@ -1,8 +1,10 @@
 from typing import Any
 
+import earthkit.data
 import numpy as np
 
 EARTH_RADIUS_M = 6371000.0
+OUTPUT_PARAM = "wind_point_direction"
 
 
 def _haversine(lat: float, lon: float, lats: np.ndarray, lons: np.ndarray) -> np.ndarray:
@@ -36,21 +38,35 @@ def project_wind(u: float, v: float, direction: float) -> float:
     return float(-(u * np.sin(theta) + v * np.cos(theta)))
 
 
-def wind_point_direction(fields: Any, latitude: float, longitude: float, direction: float, u_param: str = "u", v_param: str = "v") -> float:
+def wind_point_direction(fields: Any, latitude: float, longitude: float, direction: float, u_param: str = "u", v_param: str = "v") -> Any:
     """Wind speed against a surface at a location, from an earthkit data object containing the u and v components
+
+    Returns a single-field earthkit data object (one grid point at the location, param `wind_point_direction`), so
+    that downstream blocks, eg sinks, can handle it like any other field list.
 
     Each component is interpolated to the location (inverse-distance weighting over the four closest grid points),
     and then projected onto the direction -- see `project_wind`.
     """
     components = {}
+    step = None
     for name, param in (("u", u_param), ("v", v_param)):
         selected = fields.sel(param=param)
         if len(selected) != 1:
             raise ValueError(f"expected exactly one field for param {param}, got {len(selected)}")
         field = selected[0]
+        step = field.metadata("step", default=None) if step is None else step
         lats, lons = _latlon(field)
         components[name] = interpolate_to_point(np.asarray(field.values).flatten(), lats, lons, latitude, longitude)
-    return project_wind(components["u"], components["v"], direction)
+    speed = project_wind(components["u"], components["v"], direction)
+    metadata: dict[str, Any] = {
+        "param": OUTPUT_PARAM,
+        "latitudes": np.array([latitude]),
+        "longitudes": np.array([longitude]),
+        "values": np.array([speed]),
+    }
+    if step is not None:
+        metadata["step"] = step
+    return earthkit.data.from_source("list-of-dicts", [metadata])
 
 
 def _latlon(field: Any) -> tuple[np.ndarray, np.ndarray]:
