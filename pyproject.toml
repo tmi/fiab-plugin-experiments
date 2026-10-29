@@ -1,0 +1,23 @@
+# Virtual workspace root: not a package itself, only ties the two side-by-side packages into a single dev venv
+# (both editable), so that `uv run python` here can exercise them together. The packages do not depend on each other.
+[project]
+name = "fiab-plugin-experiments-workspace"
+version = "0.0.0"
+requires-python = ">=3.11"
+dependencies = []
+
+[dependency-groups]
+dev = [
+  "fiab-plugin-experiments",
+  "fiab-plugin-experiments-runtime",
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.sources]
+fiab-plugin-experiments = { workspace = true }
+fiab-plugin-experiments-runtime = { workspace = true }
+
+[tool.uv.workspace]
+members = [ "packages/*" ]
