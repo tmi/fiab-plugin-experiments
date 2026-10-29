@@ -16,8 +16,8 @@ resolution-markers = [
 [manifest]
 members = [
     "fiab-plugin-experiments",
+    "fiab-plugin-experiments-dev",
     "fiab-plugin-experiments-runtime",
-    "fiab-plugin-experiments-workspace",
 ]
 
 [[package]]
@@ -542,6 +542,21 @@ dev = [
 ]
 
 [[package]]
+name = "fiab-plugin-experiments-dev"
+version = "0.0.0"
+source = { editable = "." }
+dependencies = [
+    { name = "fiab-plugin-experiments" },
+    { name = "fiab-plugin-experiments-runtime" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "fiab-plugin-experiments", editable = "packages/fiab-plugin-experiments" },
+    { name = "fiab-plugin-experiments-runtime", editable = "packages/fiab-plugin-experiments-runtime" },
+]
+
+[[package]]
 name = "fiab-plugin-experiments-runtime"
 version = "0.1.0"
 source = { editable = "packages/fiab-plugin-experiments-runtime" }
@@ -569,25 +584,6 @@ dev = [
     { name = "pytest" },
     { name = "ruff" },
     { name = "ty" },
-]
-
-[[package]]
-name = "fiab-plugin-experiments-workspace"
-version = "0.0.0"
-source = { virtual = "." }
-
-[package.dev-dependencies]
-dev = [
-    { name = "fiab-plugin-experiments" },
-    { name = "fiab-plugin-experiments-runtime" },
-]
-
-[package.metadata]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "fiab-plugin-experiments", editable = "packages/fiab-plugin-experiments" },
-    { name = "fiab-plugin-experiments-runtime", editable = "packages/fiab-plugin-experiments-runtime" },
 ]
 
 [[package]]
